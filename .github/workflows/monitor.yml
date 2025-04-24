@@ -1,24 +1,31 @@
 name: Website Monitor
-
 on:
   schedule:
-    - cron: '0 */6 * * *'  # 每6小时运行一次
-  workflow_dispatch:  # 允许手动触发
+    - cron: '0 */6 * * *'  # UTC时间每天执行4次
+  workflow_dispatch:       # 允许手动触发
 
 jobs:
   monitor:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Debug directory
+        run: |
+          echo "当前目录："
+          pwd
+          echo "文件列表："
+          ls -la
+
       - name: Setup Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v4
         with:
-          node-version: '16'
-          
+          node-version: '20'  # 推荐使用LTS版本
+
       - name: Install dependencies
         run: npm install axios
-        
+
       - name: Run monitor
         run: node monitor.js
         env:
